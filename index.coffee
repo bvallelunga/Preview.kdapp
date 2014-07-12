@@ -3,19 +3,19 @@ class PreviewMainView extends KDView
   constructor:(options = {}, data)->
     options.cssClass = 'preview main-view'
     @user = KD.nick()
-    @port = @getParameterByName "port"
+    @app = @getParameterByName "app"
     super options, data
 
   viewAppended:->  
-    if @port
-      KodingAppsController.appendHeadElements
+    if @app
+       KodingAppsController.appendHeadElements
           identifier  : "preview"
           items       : [
             type    : 'style'
-            url     : "http://#{@user}.kd.io:#{@port}/style.css"
+            url     : "//#{@user}.kd.io/#{@app}.kdapp/style.css"
           ,
             type    : 'script'
-            url     : "http://#{@user}.kd.io:#{@port}/index.js"
+            url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
           ]
        , console.log
     else
@@ -24,7 +24,7 @@ class PreviewMainView extends KDView
       @addSubView @alert = new KDCustomHTMLView
         tagName    : "div"
         cssClass   : "alert"
-        partial    : "Please specify a port to listen to..."
+        partial    : "Please specify a kdapp to serve..."
         
   getParameterByName: (name)->
     name = name.replace(/[\[]/, "\\[").replace /[\]]/, "\\]"

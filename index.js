@@ -1,4 +1,4 @@
-/* Compiled by kdc on Sat Jul 12 2014 09:03:57 GMT+0000 (UTC) */
+/* Compiled by kdc on Sat Jul 12 2014 11:14:48 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/index.coffee */
@@ -15,21 +15,21 @@ PreviewMainView = (function(_super) {
     }
     options.cssClass = 'preview main-view';
     this.user = KD.nick();
-    this.port = this.getParameterByName("port");
+    this.app = this.getParameterByName("app");
     PreviewMainView.__super__.constructor.call(this, options, data);
   }
 
   PreviewMainView.prototype.viewAppended = function() {
-    if (this.port) {
+    if (this.app) {
       return KodingAppsController.appendHeadElements({
         identifier: "preview",
         items: [
           {
             type: 'style',
-            url: "http://" + this.user + ".kd.io:" + this.port + "/style.css"
+            url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/style.css"
           }, {
             type: 'script',
-            url: "http://" + this.user + ".kd.io:" + this.port + "/index.js"
+            url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/index.js"
           }
         ]
       }, console.log);
@@ -38,7 +38,7 @@ PreviewMainView = (function(_super) {
       return this.addSubView(this.alert = new KDCustomHTMLView({
         tagName: "div",
         cssClass: "alert",
-        partial: "Please specify a port to listen to..."
+        partial: "Please specify a kdapp to serve..."
       }));
     }
   };
