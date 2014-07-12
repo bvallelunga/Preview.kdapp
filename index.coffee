@@ -4,21 +4,20 @@ class PreviewMainView extends KDView
     options.cssClass = 'preview main-view'
     @user = KD.nick()
     @app = @getParameterByName "app"
-    window.appPreview = @
     super options, data
 
   viewAppended:->  
     if @app
-       KodingAppsController.appendHeadElements
+        $.get "//#{@user}.kd.io/#{@app}.kdapp/index.js", (js)=>
+          appView = @
+          eval(js)
+        
+        KodingAppsController.appendHeadElements
           identifier  : "preview"
           items       : [
             type    : 'style'
             url     : "//#{@user}.kd.io/#{@app}.kdapp/style.css"
-          ,
-            type    : 'script'
-            url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
           ]
-       , console.log
     else
       @setClass "active"
       

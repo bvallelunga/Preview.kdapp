@@ -1,4 +1,4 @@
-/* Compiled by kdc on Sat Jul 12 2014 11:47:56 GMT+0000 (UTC) */
+/* Compiled by kdc on Sat Jul 12 2014 20:38:13 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/index.coffee */
@@ -16,24 +16,26 @@ PreviewMainView = (function(_super) {
     options.cssClass = 'preview main-view';
     this.user = KD.nick();
     this.app = this.getParameterByName("app");
-    window.appPreview = this;
     PreviewMainView.__super__.constructor.call(this, options, data);
   }
 
   PreviewMainView.prototype.viewAppended = function() {
+    var _this = this;
     if (this.app) {
+      $.get("//" + this.user + ".kd.io/" + this.app + ".kdapp/index.js", function(js) {
+        var appView;
+        appView = _this;
+        return eval(js);
+      });
       return KodingAppsController.appendHeadElements({
         identifier: "preview",
         items: [
           {
             type: 'style',
             url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/style.css"
-          }, {
-            type: 'script',
-            url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/index.js"
           }
         ]
-      }, console.log);
+      });
     } else {
       this.setClass("active");
       return this.addSubView(this.alert = new KDCustomHTMLView({
