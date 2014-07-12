@@ -1,4 +1,4 @@
-/* Compiled by kdc on Sat Jul 12 2014 20:45:42 GMT+0000 (UTC) */
+/* Compiled by kdc on Sat Jul 12 2014 20:49:02 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/index.coffee */
@@ -16,7 +16,7 @@ PreviewMainView = (function(_super) {
     options.cssClass = 'preview main-view';
     this.user = KD.nick();
     this.app = this.getParameterByName("app");
-    window.appPreview = this;
+    window.appView = this;
     PreviewMainView.__super__.constructor.call(this, options, data);
   }
 

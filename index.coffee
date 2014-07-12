@@ -4,7 +4,7 @@ class PreviewMainView extends KDView
     options.cssClass = 'preview main-view'
     @user = KD.nick()
     @app = @getParameterByName "app"
-    window.appPreview = @
+    window.appView = @
     super options, data
 
   viewAppended:->  
