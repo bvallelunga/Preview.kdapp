@@ -4,6 +4,7 @@ class PreviewMainView extends KDView
     options.cssClass = 'preview main-view'
     @user = KD.nick()
     @app = @getParameterByName "app"
+    window.appPreview = @
     super options, data
 
   viewAppended:->  
@@ -31,7 +32,7 @@ class PreviewMainView extends KDView
     regex = new RegExp "[\\?&]#{name}=([^&#]*)"
     results = regex.exec location.search
     return if results then decodeURIComponent results[1].replace /\+/g, "" else ""
-
+  
 class PreviewController extends AppController
 
   constructor:(options = {}, data)->
