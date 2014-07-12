@@ -5,7 +5,7 @@
   "title": "Preview",
   "name": "Preview",
   "identifier": "com.koding.apps.preview",
-  "path": "/home/bvallelunga/Applications/Preview.kdapp",
+  "path": "~/Applications/Preview.kdapp",
   "homepage": "bvallelunga.kd.io/preview",
   "repository": "git://github.com/bvallelunga/preview.kdapp.git",
   "description": "Preview : a Koding application created with the blank template.",
