@@ -1,7 +1,7 @@
-/* Compiled by kdc on Sat Jul 12 2014 08:47:17 GMT+0000 (UTC) */
+/* Compiled by kdc on Sat Jul 12 2014 09:03:35 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
-/* BLOCK STARTS: /home/bvallelunga/Applications/KDApp/apps/Preview.kdapp/index.coffee */
+/* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/index.coffee */
 var PreviewController, PreviewMainView,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -34,6 +34,7 @@ PreviewMainView = (function(_super) {
         ]
       }, console.log);
     } else {
+      this.setClass("active");
       return this.addSubView(this.alert = new KDCustomHTMLView({
         tagName: "div",
         cssClass: "alert",

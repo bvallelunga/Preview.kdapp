@@ -19,6 +19,8 @@ class PreviewMainView extends KDView
           ]
        , console.log
     else
+      @setClass "active"
+      
       @addSubView @alert = new KDCustomHTMLView
         tagName    : "div"
         cssClass   : "alert"

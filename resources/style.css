@@ -1,4 +1,4 @@
-.preview.main-view {
+.preview.main-view.active {
   background-color: #202527;
   background-image: url("//koding.com/a/images/home-pat.png");
   overflow: auto;
