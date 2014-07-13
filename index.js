@@ -1,4 +1,4 @@
-/* Compiled by kdc on Sun Jul 13 2014 03:12:22 GMT+0000 (UTC) */
+/* Compiled by kdc on Sun Jul 13 2014 03:16:41 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -154,6 +154,7 @@ PreviewMainView = (function(_super) {
           path: _this.appPath
         }).then(function(state) {
           if (state) {
+            debugger;
             _this.addClass("reset");
             return KodingAppsController.appendHeadElements({
               identifier: "preview",
