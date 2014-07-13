@@ -1,4 +1,4 @@
-/* Compiled by kdc on Sat Jul 12 2014 20:49:02 GMT+0000 (UTC) */
+/* Compiled by kdc on Sat Jul 12 2014 20:49:42 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/index.coffee */

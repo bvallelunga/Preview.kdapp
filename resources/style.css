@@ -1,7 +1,13 @@
+.preview.main-view,
+.preview.main-view > .main-view {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
 .preview.main-view.active {
   background-color: #202527;
   background-image: url("//koding.com/a/images/home-pat.png");
-  overflow: auto;
 }
 
 .preview.active .alert {
