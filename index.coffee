@@ -33,7 +33,7 @@ class PreviewMainView extends KDView
                 ]
               , console.log
           else
-            @alert.updatePartial "Please specify a kdapp to serve..."
+            @alert.updatePartial "Failed to serve #{@app}.kdapp..."
 
     else
       @alert.updatePartial "Please specify a kdapp to serve..."

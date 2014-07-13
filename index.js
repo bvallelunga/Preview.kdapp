@@ -1,4 +1,4 @@
-/* Compiled by kdc on Sun Jul 13 2014 03:18:03 GMT+0000 (UTC) */
+/* Compiled by kdc on Sun Jul 13 2014 03:20:50 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -168,7 +168,7 @@ PreviewMainView = (function(_super) {
               ]
             }, console.log);
           } else {
-            return _this.alert.updatePartial("Please specify a kdapp to serve...");
+            return _this.alert.updatePartial("Failed to serve " + _this.app + ".kdapp...");
           }
         });
       });
