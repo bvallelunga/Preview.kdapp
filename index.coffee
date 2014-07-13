@@ -8,7 +8,10 @@ class PreviewMainView extends KDView
     super options, data
 
   viewAppended:->  
-    if @app
+    $.ajax 
+      url: "//#{@user}.kd.io/#{@app}.kdapp/index.js"
+      type: "HEAD"
+      success: =>
         KodingAppsController.appendHeadElements
           identifier  : "preview"
           items       : [
@@ -19,13 +22,13 @@ class PreviewMainView extends KDView
             url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
           ]
         , console.log
-    else
-      @setClass "active"
-      
-      @addSubView @alert = new KDCustomHTMLView
-        tagName    : "div"
-        cssClass   : "alert"
-        partial    : "Please specify a kdapp to serve..."
+      error: =>
+        @setClass "active"
+        
+        @addSubView @alert = new KDCustomHTMLView
+          tagName    : "div"
+          cssClass   : "alert"
+          partial    : "Please specify a kdapp to serve..."
         
   getParameterByName: (name)->
     name = name.replace(/[\[]/, "\\[").replace /[\]]/, "\\]"
