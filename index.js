@@ -1,4 +1,4 @@
-/* Compiled by kdc on Sun Jul 13 2014 00:42:11 GMT+0000 (UTC) */
+/* Compiled by kdc on Sun Jul 13 2014 00:27:17 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/index.coffee */
@@ -21,33 +21,27 @@ PreviewMainView = (function(_super) {
   }
 
   PreviewMainView.prototype.viewAppended = function() {
-    var _this = this;
-    return $.ajax({
-      url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/index.js",
-      type: "HEAD",
-      success: function() {
-        return KodingAppsController.appendHeadElements({
-          identifier: "preview",
-          items: [
-            {
-              type: 'style',
-              url: "//" + _this.user + ".kd.io/" + _this.app + ".kdapp/style.css"
-            }, {
-              type: 'script',
-              url: "//" + _this.user + ".kd.io/" + _this.app + ".kdapp/index.js"
-            }
-          ]
-        }, console.log);
-      },
-      error: function() {
-        _this.setClass("active");
-        return _this.addSubView(_this.alert = new KDCustomHTMLView({
-          tagName: "div",
-          cssClass: "alert",
-          partial: "Please specify a kdapp to serve..."
-        }));
-      }
-    });
+    if (this.app) {
+      return KodingAppsController.appendHeadElements({
+        identifier: "preview",
+        items: [
+          {
+            type: 'style',
+            url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/style.css"
+          }, {
+            type: 'script',
+            url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/index.js"
+          }
+        ]
+      }, console.log);
+    } else {
+      this.setClass("active");
+      return this.addSubView(this.alert = new KDCustomHTMLView({
+        tagName: "div",
+        cssClass: "alert",
+        partial: "Please specify a kdapp to serve..."
+      }));
+    }
   };
 
   PreviewMainView.prototype.getParameterByName = function(name) {
