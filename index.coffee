@@ -20,8 +20,7 @@ class PreviewMainView extends KDView
       @kiteHelper.getKite().then (kite)=>
         kite.fsExists(path : @appPath).then (state)=>
           if state
-              debugger
-              @addClass "reset"
+              @setClass "reset"
           
               KodingAppsController.appendHeadElements
                 identifier  : "preview"
