@@ -1,6 +1,8 @@
-/* Compiled by kdc on Sun Jul 13 2014 00:27:17 GMT+0000 (UTC) */
+/* Compiled by kdc on Sun Jul 13 2014 03:06:55 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
+/* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
+
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/index.coffee */
 var PreviewController, PreviewMainView,
   __hasProp = {}.hasOwnProperty,
@@ -14,33 +16,47 @@ PreviewMainView = (function(_super) {
       options = {};
     }
     options.cssClass = 'preview main-view';
+    window.appPreview = this;
     this.user = KD.nick();
     this.app = this.getParameterByName("app");
-    window.appPreview = this;
+    this.appPath = "/home/" + this.user + "/Web/" + this.app + ".kdapp";
+    this.kiteHelper = new KiteHelper;
     PreviewMainView.__super__.constructor.call(this, options, data);
   }
 
   PreviewMainView.prototype.viewAppended = function() {
+    var _this = this;
+    this.addSubView(this.alert = new KDCustomHTMLView({
+      tagName: "div",
+      cssClass: "alert"
+    }));
     if (this.app) {
-      return KodingAppsController.appendHeadElements({
-        identifier: "preview",
-        items: [
-          {
-            type: 'style',
-            url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/style.css"
-          }, {
-            type: 'script',
-            url: "//" + this.user + ".kd.io/" + this.app + ".kdapp/index.js"
+      this.alert.updatePartial("Loading app...");
+      return this.kiteHelper.getKite().then(function(kite) {
+        return kite.fsExists({
+          path: _this.appPath
+        }).then(function(state) {
+          if (state) {
+            _this.addClass("reset");
+            return KodingAppsController.appendHeadElements({
+              identifier: "preview",
+              items: [
+                {
+                  type: 'style',
+                  url: "//" + _this.user + ".kd.io/" + _this.app + ".kdapp/style.css"
+                }, {
+                  type: 'script',
+                  url: "//" + _this.user + ".kd.io/" + _this.app + ".kdapp/index.js"
+                }
+              ]
+            }, console.log);
+          } else {
+            return _this.alert.updatePartial("Please specify a kdapp to serve...");
           }
-        ]
-      }, console.log);
+        });
+      });
     } else {
-      this.setClass("active");
-      return this.addSubView(this.alert = new KDCustomHTMLView({
-        tagName: "div",
-        cssClass: "alert",
-        partial: "Please specify a kdapp to serve..."
-      }));
+      return this.alert.updatePartial("Please specify a kdapp to serve...");
     }
   };
 

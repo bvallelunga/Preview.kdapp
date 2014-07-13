@@ -2,30 +2,41 @@ class PreviewMainView extends KDView
 
   constructor:(options = {}, data)->
     options.cssClass = 'preview main-view'
+    window.appPreview = @
     @user = KD.nick()
     @app = @getParameterByName "app"
-    window.appPreview = @
+    @appPath = "/home/#{@user}/Web/#{@app}.kdapp"
+    @kiteHelper = new KiteHelper
     super options, data
 
   viewAppended:->  
+    @addSubView @alert = new KDCustomHTMLView
+      tagName    : "div"
+      cssClass   : "alert"
+    
     if @app
-        KodingAppsController.appendHeadElements
-          identifier  : "preview"
-          items       : [
-            type    : 'style'
-            url     : "//#{@user}.kd.io/#{@app}.kdapp/style.css"
-          ,
-            type    : 'script'
-            url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
-          ]
-        , console.log
-    else
-      @setClass "active"
+      @alert.updatePartial "Loading app..."
       
-      @addSubView @alert = new KDCustomHTMLView
-        tagName    : "div"
-        cssClass   : "alert"
-        partial    : "Please specify a kdapp to serve..."
+      @kiteHelper.getKite().then (kite)=>
+        kite.fsExists(path : @appPath).then (state)=>
+          if state
+              @addClass "reset"
+          
+              KodingAppsController.appendHeadElements
+                identifier  : "preview"
+                items       : [
+                  type    : 'style'
+                  url     : "//#{@user}.kd.io/#{@app}.kdapp/style.css"
+                ,
+                  type    : 'script'
+                  url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
+                ]
+              , console.log
+          else
+            @alert.updatePartial "Please specify a kdapp to serve..."
+
+    else
+      @alert.updatePartial "Please specify a kdapp to serve..."
         
   getParameterByName: (name)->
     name = name.replace(/[\[]/, "\\[").replace /[\]]/, "\\]"
