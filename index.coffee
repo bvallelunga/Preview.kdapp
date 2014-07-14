@@ -2,6 +2,7 @@ class PreviewMainView extends KDView
 
   constructor:(options = {}, data)->
     options.cssClass = 'preview main-view'
+    window.appPreview = @
     @user = KD.nick()
     @app = @getParameterByName "app"
     @appPath = "/home/#{@user}/Web/#{@app}.kdapp"
@@ -21,7 +22,6 @@ class PreviewMainView extends KDView
           if state
               @setClass "reset"
               @destroySubViews()
-              @addSubView window.appPreview = new KDView
           
               KodingAppsController.appendHeadElements
                 identifier  : "preview"
