@@ -22,15 +22,15 @@ class PreviewMainView extends KDView
           if state
               @setClass "reset"
               @destroySubViews()
-          
+              
               KodingAppsController.appendHeadElements
                 identifier  : "preview"
                 items       : [
                   type    : 'style'
                   url     : "//#{@user}.kd.io/#{@app}.kdapp/style.css"
-                ,
-                  type    : 'script'
-                  url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
+                #,
+                #  type    : 'script'
+                #  url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
                 ]
               , console.log
           else
