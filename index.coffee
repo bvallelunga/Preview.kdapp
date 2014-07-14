@@ -28,11 +28,11 @@ class PreviewMainView extends KDView
                 items       : [
                   type    : 'style'
                   url     : "//#{@user}.kd.io/#{@app}.kdapp/style.css"
-                #,
-                #  type    : 'script'
-                #  url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
+                ,
+                  type    : 'script'
+                  url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
                 ]
-              , console.log
+              , (err)-> console.log err
           else
             @alert.updatePartial "Failed to serve #{@app}.kdapp..."
 
