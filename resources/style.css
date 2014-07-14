@@ -19,7 +19,3 @@
   border-radius: 8px;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
-
-.preview.main-view.reset .alert {
-  display: none;
-}

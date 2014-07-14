@@ -1,4 +1,4 @@
-/* Compiled by kdc on Sun Jul 13 2014 03:26:37 GMT+0000 (UTC) */
+/* Compiled by kdc on Mon Jul 14 2014 23:16:06 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -133,7 +133,6 @@ PreviewMainView = (function(_super) {
       options = {};
     }
     options.cssClass = 'preview main-view';
-    window.appPreview = this;
     this.user = KD.nick();
     this.app = this.getParameterByName("app");
     this.appPath = "/home/" + this.user + "/Web/" + this.app + ".kdapp";
@@ -155,6 +154,8 @@ PreviewMainView = (function(_super) {
         }).then(function(state) {
           if (state) {
             _this.setClass("reset");
+            _this.destroySubViews();
+            _this.addSubView(window.appPreview = new KDView);
             return KodingAppsController.appendHeadElements({
               identifier: "preview",
               items: [
