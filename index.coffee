@@ -32,7 +32,9 @@ class PreviewMainView extends KDView
                   type    : 'script'
                   url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
                 ]
-              , (err)-> throw Error err if err
+              , (err)->
+                throw Error err if err
+                console.log 123
           else
             @alert.updatePartial "Failed to serve #{@app}.kdapp..."
 
