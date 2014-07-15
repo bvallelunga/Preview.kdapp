@@ -2,7 +2,6 @@ class PreviewMainView extends KDView
 
   constructor:(options = {}, data)->
     options.cssClass = 'preview main-view'
-    window.appPreview = @
     @user = KD.nick()
     @app = @getParameterByName "app"
     @appPath = "/home/#{@user}/Web/#{@app}.kdapp"
@@ -22,6 +21,7 @@ class PreviewMainView extends KDView
           if state
               @setClass "reset"
               @destroySubViews()
+              window.appPreview = @
               
               KodingAppsController.appendHeadElements
                 identifier  : "preview"
@@ -33,8 +33,8 @@ class PreviewMainView extends KDView
                   url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
                 ]
               , (err)->
+                delete window.appPreview
                 throw Error err if err
-                console.log 123
           else
             @alert.updatePartial "Failed to serve #{@app}.kdapp..."
 
