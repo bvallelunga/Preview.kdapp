@@ -18,7 +18,7 @@ class PreviewMainView extends KDView
       when "test", "production"
         @publishApp appPath, publishTarget
       else
-        previewApp()
+        @previewApp()
   
   getParameterByName: (name)->
     name = name.replace(/[\[]/, "\\[").replace /[\]]/, "\\]"
@@ -28,11 +28,11 @@ class PreviewMainView extends KDView
   
   previewApp:->
     app = @getParameterByName "app"
-    appPath = "/home/#{@user}/Web/#{@app}.kdapp"
+    appPath = "/home/#{@user}/Web/#{app}.kdapp"
+    @alert.show()
     
-    if @app
+    if app
       @alert.updatePartial "Loading app..."
-      @alert.show()
       
       @kiteHelper.getKite().then (kite)=>
         kite.fsExists(path : appPath).then (state)=>
@@ -45,16 +45,16 @@ class PreviewMainView extends KDView
                 identifier  : "preview"
                 items       : [
                   type    : 'style'
-                  url     : "//#{@user}.kd.io/#{@app}.kdapp/style.css"
+                  url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
                 ,
                   type    : 'script'
-                  url     : "//#{@user}.kd.io/#{@app}.kdapp/index.js"
+                  url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
                 ]
               , (err)->
                 delete window.appPreview
                 throw Error err if err
           else
-            @alert.updatePartial "Failed to serve #{@app}.kdapp..."
+            @alert.updatePartial "Failed to serve #{app}.kdapp..."
 
     else
       @alert.updatePartial "Please specify a kdapp to serve..."

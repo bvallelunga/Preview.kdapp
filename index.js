@@ -1,4 +1,4 @@
-/* Compiled by kdc on Wed Jul 16 2014 20:56:23 GMT+0000 (UTC) */
+/* Compiled by kdc on Wed Jul 16 2014 21:00:08 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -151,7 +151,7 @@ PreviewMainView = (function(_super) {
       case "production":
         return this.publishApp(appPath, publishTarget);
       default:
-        return previewApp();
+        return this.previewApp();
     }
   };
 
@@ -171,10 +171,10 @@ PreviewMainView = (function(_super) {
     var app, appPath,
       _this = this;
     app = this.getParameterByName("app");
-    appPath = "/home/" + this.user + "/Web/" + this.app + ".kdapp";
-    if (this.app) {
+    appPath = "/home/" + this.user + "/Web/" + app + ".kdapp";
+    this.alert.show();
+    if (app) {
       this.alert.updatePartial("Loading app...");
-      this.alert.show();
       return this.kiteHelper.getKite().then(function(kite) {
         return kite.fsExists({
           path: appPath
@@ -188,10 +188,10 @@ PreviewMainView = (function(_super) {
               items: [
                 {
                   type: 'style',
-                  url: "//" + _this.user + ".kd.io/" + _this.app + ".kdapp/style.css"
+                  url: "//" + _this.user + ".kd.io/" + app + ".kdapp/style.css"
                 }, {
                   type: 'script',
-                  url: "//" + _this.user + ".kd.io/" + _this.app + ".kdapp/index.js"
+                  url: "//" + _this.user + ".kd.io/" + app + ".kdapp/index.js"
                 }
               ]
             }, function(err) {
@@ -201,7 +201,7 @@ PreviewMainView = (function(_super) {
               }
             });
           } else {
-            return _this.alert.updatePartial("Failed to serve " + _this.app + ".kdapp...");
+            return _this.alert.updatePartial("Failed to serve " + app + ".kdapp...");
           }
         });
       });
