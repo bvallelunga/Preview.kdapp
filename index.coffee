@@ -3,21 +3,39 @@ class PreviewMainView extends KDView
   constructor:(options = {}, data)->
     options.cssClass = 'preview main-view'
     @user = KD.nick()
-    @app = @getParameterByName "app"
-    @appPath = "/home/#{@user}/Web/#{@app}.kdapp"
     @kiteHelper = new KiteHelper
     super options, data
 
-  viewAppended:->  
+  viewAppended:->
     @addSubView @alert = new KDCustomHTMLView
       tagName    : "div"
-      cssClass   : "alert"
+      cssClass   : "alert hidden"
+    
+    appPath = @getParameterByName "path"
+    publishTarget = @getParameterByName "publish"
+      
+    switch publishTarget
+      when "test", "production"
+        @publishApp appPath, publishTarget
+      else
+        previewApp()
+  
+  getParameterByName: (name)->
+    name = name.replace(/[\[]/, "\\[").replace /[\]]/, "\\]"
+    regex = new RegExp "[\\?&]#{name}=([^&#]*)"
+    results = regex.exec location.search
+    return if results then decodeURIComponent results[1].replace /\+/g, "" else ""
+  
+  previewApp:->
+    app = @getParameterByName "app"
+    appPath = "/home/#{@user}/Web/#{@app}.kdapp"
     
     if @app
       @alert.updatePartial "Loading app..."
+      @alert.show()
       
       @kiteHelper.getKite().then (kite)=>
-        kite.fsExists(path : @appPath).then (state)=>
+        kite.fsExists(path : appPath).then (state)=>
           if state
               @setClass "reset"
               @destroySubViews()
@@ -40,12 +58,27 @@ class PreviewMainView extends KDView
 
     else
       @alert.updatePartial "Please specify a kdapp to serve..."
-        
-  getParameterByName: (name)->
-    name = name.replace(/[\[]/, "\\[").replace /[\]]/, "\\]"
-    regex = new RegExp "[\\?&]#{name}=([^&#]*)"
-    results = regex.exec location.search
-    return if results then decodeURIComponent results[1].replace /\+/g, "" else ""
+    
+  publishApp:(path, target='test')->
+    if path and target
+      KodingAppsController.createJApp {
+        path, target
+      }, @publishCallback
+    else
+      @alert.updatePartial "Please specify a kdapp to publish..."
+      @alert.show()
+
+  publishCallback:(err, app)->
+    if err or not app
+      warn err
+      return new KDNotificationView
+        title : "Failed to publish"
+
+    new KDNotificationView
+      title: "Published successfully!"
+
+    KD.singletons
+      .router.handleRoute "/Apps/#{app.manifest.authorNick}/#{app.name}"
   
 class PreviewController extends AppController
 

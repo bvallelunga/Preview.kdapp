@@ -1,4 +1,4 @@
-/* Compiled by kdc on Tue Jul 15 2014 17:52:22 GMT+0000 (UTC) */
+/* Compiled by kdc on Wed Jul 16 2014 20:56:23 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -134,23 +134,50 @@ PreviewMainView = (function(_super) {
     }
     options.cssClass = 'preview main-view';
     this.user = KD.nick();
-    this.app = this.getParameterByName("app");
-    this.appPath = "/home/" + this.user + "/Web/" + this.app + ".kdapp";
     this.kiteHelper = new KiteHelper;
     PreviewMainView.__super__.constructor.call(this, options, data);
   }
 
   PreviewMainView.prototype.viewAppended = function() {
-    var _this = this;
+    var appPath, publishTarget;
     this.addSubView(this.alert = new KDCustomHTMLView({
       tagName: "div",
-      cssClass: "alert"
+      cssClass: "alert hidden"
     }));
+    appPath = this.getParameterByName("path");
+    publishTarget = this.getParameterByName("publish");
+    switch (publishTarget) {
+      case "test":
+      case "production":
+        return this.publishApp(appPath, publishTarget);
+      default:
+        return previewApp();
+    }
+  };
+
+  PreviewMainView.prototype.getParameterByName = function(name) {
+    var regex, results;
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    results = regex.exec(location.search);
+    if (results) {
+      return decodeURIComponent(results[1].replace(/\+/g, ""));
+    } else {
+      return "";
+    }
+  };
+
+  PreviewMainView.prototype.previewApp = function() {
+    var app, appPath,
+      _this = this;
+    app = this.getParameterByName("app");
+    appPath = "/home/" + this.user + "/Web/" + this.app + ".kdapp";
     if (this.app) {
       this.alert.updatePartial("Loading app...");
+      this.alert.show();
       return this.kiteHelper.getKite().then(function(kite) {
         return kite.fsExists({
-          path: _this.appPath
+          path: appPath
         }).then(function(state) {
           if (state) {
             _this.setClass("reset");
@@ -183,16 +210,32 @@ PreviewMainView = (function(_super) {
     }
   };
 
-  PreviewMainView.prototype.getParameterByName = function(name) {
-    var regex, results;
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-    results = regex.exec(location.search);
-    if (results) {
-      return decodeURIComponent(results[1].replace(/\+/g, ""));
-    } else {
-      return "";
+  PreviewMainView.prototype.publishApp = function(path, target) {
+    if (target == null) {
+      target = 'test';
     }
+    if (path && target) {
+      return KodingAppsController.createJApp({
+        path: path,
+        target: target
+      }, this.publishCallback);
+    } else {
+      this.alert.updatePartial("Please specify a kdapp to publish...");
+      return this.alert.show();
+    }
+  };
+
+  PreviewMainView.prototype.publishCallback = function(err, app) {
+    if (err || !app) {
+      warn(err);
+      return new KDNotificationView({
+        title: "Failed to publish"
+      });
+    }
+    new KDNotificationView({
+      title: "Published successfully!"
+    });
+    return KD.singletons.router.handleRoute("/Apps/" + app.manifest.authorNick + "/" + app.name);
   };
 
   return PreviewMainView;
