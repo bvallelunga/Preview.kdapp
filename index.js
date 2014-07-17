@@ -1,4 +1,4 @@
-/* Compiled by kdc on Thu Jul 17 2014 00:55:34 GMT+0000 (UTC) */
+/* Compiled by kdc on Thu Jul 17 2014 19:53:41 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -139,17 +139,18 @@ PreviewMainView = (function(_super) {
   }
 
   PreviewMainView.prototype.viewAppended = function() {
-    var appPath, publishTarget;
+    var appPath, hostname, publishTarget;
     this.addSubView(this.alert = new KDCustomHTMLView({
       tagName: "div",
       cssClass: "alert hidden"
     }));
     appPath = this.getParameterByName("path");
+    hostname = this.getParameterByName("hostname");
     publishTarget = this.getParameterByName("publish");
     switch (publishTarget) {
       case "test":
       case "production":
-        return this.publishApp(appPath, publishTarget);
+        return this.publishApp(appPath, hostname, publishTarget);
       default:
         return this.previewApp();
     }
@@ -214,7 +215,7 @@ PreviewMainView = (function(_super) {
     });
   };
 
-  PreviewMainView.prototype.publishApp = function(appPath, target) {
+  PreviewMainView.prototype.publishApp = function(appPath, hostname, target) {
     var _this = this;
     if (target == null) {
       target = 'test';
@@ -226,7 +227,7 @@ PreviewMainView = (function(_super) {
     return this.pathExists(appPath, function(state) {
       if (state) {
         return KodingAppsController.createJApp({
-          path: appPath,
+          path: "[" + hostname + "]" + appPath,
           target: target
         }, _this.publishCallback);
       } else {

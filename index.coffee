@@ -11,12 +11,13 @@ class PreviewMainView extends KDView
       tagName    : "div"
       cssClass   : "alert hidden"
     
-    appPath = @getParameterByName "path"
+    appPath       = @getParameterByName "path"
+    hostname      = @getParameterByName "hostname"
     publishTarget = @getParameterByName "publish"
       
     switch publishTarget
       when "test", "production"
-        @publishApp appPath, publishTarget
+        @publishApp appPath, hostname, publishTarget
       else
         @previewApp()
   
@@ -59,7 +60,7 @@ class PreviewMainView extends KDView
       else
         @alert.updatePartial "Failed to serve #{app}.kdapp..."
     
-  publishApp:(appPath, target='test')->
+  publishApp:(appPath, hostname, target='test')->
     unless appPath
       @alert.updatePartial "Please specify a kdapp to publish..."
       return @alert.show()
@@ -67,7 +68,8 @@ class PreviewMainView extends KDView
     @pathExists appPath, (state)=>
       if state
         KodingAppsController.createJApp {
-          path: appPath, target
+          path: "[#{hostname}]#{appPath}", 
+          target: target
         }, @publishCallback
       else
         @alert.updatePartial "Please specify a kdapp to publish..."
