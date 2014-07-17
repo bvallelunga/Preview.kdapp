@@ -67,7 +67,7 @@ class PreviewMainView extends KDView
     @pathExists appPath, (state)=>
       if state
         KodingAppsController.createJApp {
-          appPath, target
+          path: appPath, target
         }, @publishCallback
       else
         @alert.updatePartial "Please specify a kdapp to publish..."
