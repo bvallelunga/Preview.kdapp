@@ -66,8 +66,6 @@ class PreviewMainView extends KDView
     if appPath
       @pathExists appPath, (state)=>
         if state
-          window.debug = @publishCallback
-          
           KodingAppsController.createJApp {
             appPath, target
           }, @publishCallback
@@ -79,8 +77,6 @@ class PreviewMainView extends KDView
       @alert.show()
 
   publishCallback:(err, app)->
-    console.log err, app
-    
     if err or not app
       warn err
       return new KDNotificationView
