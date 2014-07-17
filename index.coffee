@@ -66,7 +66,7 @@ class PreviewMainView extends KDView
     if appPath
       @pathExists appPath, (state)=>
         if state
-          console.log appPath, target, @
+          window.debug = @publishCallback
           
           KodingAppsController.createJApp {
             appPath, target

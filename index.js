@@ -1,4 +1,4 @@
-/* Compiled by kdc on Thu Jul 17 2014 00:26:58 GMT+0000 (UTC) */
+/* Compiled by kdc on Thu Jul 17 2014 00:29:04 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -223,7 +223,7 @@ PreviewMainView = (function(_super) {
     if (appPath) {
       return this.pathExists(appPath, function(state) {
         if (state) {
-          console.log(appPath, target, _this);
+          window.debug = _this.publishCallback;
           return KodingAppsController.createJApp({
             appPath: appPath,
             target: target
