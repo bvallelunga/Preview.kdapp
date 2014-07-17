@@ -63,9 +63,16 @@ class PreviewMainView extends KDView
       @alert.updatePartial "Please specify a kdapp to serve..."
     
   publishApp:(appPath, target='test')->
+    console.log  1
+    
     if appPath
+      console.log  2
+    
       @pathExists appPath, (state)=>
+        console.log  3
+        
         if state
+          console.log  4
           KodingAppsController.createJApp {
             appPath, target
           }, @publishCallback
@@ -77,6 +84,8 @@ class PreviewMainView extends KDView
       @alert.show()
 
   publishCallback:(err, app)->
+    console.log  5
+    
     if err or not app
       warn err
       return new KDNotificationView
