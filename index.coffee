@@ -40,7 +40,7 @@ class PreviewMainView extends KDView
     appPath = "/home/#{@user}/Web/#{app}.kdapp"
     
     unless app
-      return @showAlert "Please specify a kdapp to serve..."
+      return @showAlert "Please specify a kdapp to preview..."
       
     window.appPreview = @
     KodingAppsController.appendHeadElements
@@ -58,12 +58,12 @@ class PreviewMainView extends KDView
       unless err
         @setClass "reset"
       else
-        @showAlert "Failed to serve #{app}.kdapp..."
+        @showAlert "Failed to preview #{app}.kdapp..."
         throw Error err
     
     @pathExists appPath, (state)=>
       unless state
-        @showAlert "Failed to serve #{app}.kdapp..."
+        @showAlert "Failed to preview #{app}.kdapp..."
     
   publishApp:(appPath, hostname, target='test')->
     unless appPath and hostname
