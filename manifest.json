@@ -8,7 +8,7 @@
   "path": "~/Applications/Preview.kdapp",
   "homepage": "bvallelunga.kd.io/preview",
   "repository": "git://github.com/bvallelunga/preview.kdapp.git",
-  "description": "Preview : a Koding application created with the blank template.",
+  "description": "Preview : Enables Koding developers to preview and publish there kdapps in fullscreen mode. Preview is the companion app to the KDApp CLI.",
   "category": "web-app",
   "source": {
     "blocks": {

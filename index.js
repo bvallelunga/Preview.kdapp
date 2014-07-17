@@ -1,4 +1,4 @@
-/* Compiled by kdc on Thu Jul 17 2014 21:27:43 GMT+0000 (UTC) */
+/* Compiled by kdc on Thu Jul 17 2014 22:40:26 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -189,7 +189,7 @@ PreviewMainView = (function(_super) {
     app = this.getParameterByName("app");
     appPath = "/home/" + this.user + "/Web/" + app + ".kdapp";
     if (!app) {
-      return this.showAlert("Please specify a kdapp to serve...");
+      return this.showAlert("Please specify a kdapp to preview...");
     }
     window.appPreview = this;
     KodingAppsController.appendHeadElements({
@@ -208,13 +208,13 @@ PreviewMainView = (function(_super) {
       if (!err) {
         return _this.setClass("reset");
       } else {
-        _this.showAlert("Failed to serve " + app + ".kdapp...");
+        _this.showAlert("Failed to preview " + app + ".kdapp...");
         throw Error(err);
       }
     });
     return this.pathExists(appPath, function(state) {
       if (!state) {
-        return _this.showAlert("Failed to serve " + app + ".kdapp...");
+        return _this.showAlert("Failed to preview " + app + ".kdapp...");
       }
     });
   };
