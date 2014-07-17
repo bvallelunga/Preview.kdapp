@@ -1,4 +1,4 @@
-/* Compiled by kdc on Thu Jul 17 2014 00:09:25 GMT+0000 (UTC) */
+/* Compiled by kdc on Thu Jul 17 2014 00:11:04 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -215,16 +215,16 @@ PreviewMainView = (function(_super) {
     }
   };
 
-  PreviewMainView.prototype.publishApp = function(path, target) {
+  PreviewMainView.prototype.publishApp = function(appPath, target) {
     var _this = this;
     if (target == null) {
       target = 'test';
     }
-    if (path) {
+    if (appPath) {
       return this.pathExists(appPath, function(state) {
         if (state) {
           return KodingAppsController.createJApp({
-            path: path,
+            appPath: appPath,
             target: target
           }, _this.publishCallback);
         } else {
