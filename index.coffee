@@ -35,46 +35,43 @@ class PreviewMainView extends KDView
     appPath = "/home/#{@user}/Web/#{app}.kdapp"
     @alert.show()
     
-    if app
-      @alert.updatePartial "Loading app..."
-      
-      @pathExists appPath, (state)=>
-        if state
-            @setClass "reset"
-            @destroySubViews()
-            window.appPreview = @
-            
-            KodingAppsController.appendHeadElements
-              identifier  : "preview"
-              items       : [
-                type    : 'style'
-                url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
-              ,
-                type    : 'script'
-                url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
-              ]
-            , (err)->
-              delete window.appPreview
-              throw Error err if err
-        else
-          @alert.updatePartial "Failed to serve #{app}.kdapp..."
-
-    else
-      @alert.updatePartial "Please specify a kdapp to serve..."
+    return @alert.updatePartial "Please specify a kdapp to serve..." unless app
+    
+    @alert.updatePartial "Loading app..."
+    @pathExists appPath, (state)=>
+      if state
+          @setClass "reset"
+          @destroySubViews()
+          window.appPreview = @
+          
+          KodingAppsController.appendHeadElements
+            identifier  : "preview"
+            items       : [
+              type    : 'style'
+              url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
+            ,
+              type    : 'script'
+              url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
+            ]
+          , (err)->
+            delete window.appPreview
+            throw Error err if err
+      else
+        @alert.updatePartial "Failed to serve #{app}.kdapp..."
     
   publishApp:(appPath, target='test')->
-    if appPath
-      @pathExists appPath, (state)=>
-        if state
-          KodingAppsController.createJApp {
-            appPath, target
-          }, @publishCallback
-        else
-          @alert.updatePartial "Please specify a kdapp to publish..."
-          @alert.show()
-    else
+    unless appPath
       @alert.updatePartial "Please specify a kdapp to publish..."
-      @alert.show()
+      return @alert.show()
+    
+    @pathExists appPath, (state)=>
+      if state
+        KodingAppsController.createJApp {
+          appPath, target
+        }, @publishCallback
+      else
+        @alert.updatePartial "Please specify a kdapp to publish..."
+        @alert.show()
 
   publishCallback:(err, app)->
     if err or not app
