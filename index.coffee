@@ -26,6 +26,10 @@ class PreviewMainView extends KDView
     results = regex.exec location.search
     return if results then decodeURIComponent results[1].replace /\+/g, "" else ""
   
+  pathExists: (path, cb)->
+    @kiteHelper.getKite().then (kite)=>
+      kite.fsExists(path : path).then cb
+  
   previewApp:->
     app = @getParameterByName "app"
     appPath = "/home/#{@user}/Web/#{app}.kdapp"
@@ -34,36 +38,40 @@ class PreviewMainView extends KDView
     if app
       @alert.updatePartial "Loading app..."
       
-      @kiteHelper.getKite().then (kite)=>
-        kite.fsExists(path : appPath).then (state)=>
-          if state
-              @setClass "reset"
-              @destroySubViews()
-              window.appPreview = @
-              
-              KodingAppsController.appendHeadElements
-                identifier  : "preview"
-                items       : [
-                  type    : 'style'
-                  url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
-                ,
-                  type    : 'script'
-                  url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
-                ]
-              , (err)->
-                delete window.appPreview
-                throw Error err if err
-          else
-            @alert.updatePartial "Failed to serve #{app}.kdapp..."
+      @pathExists appPath, (state)=>
+        if state
+            @setClass "reset"
+            @destroySubViews()
+            window.appPreview = @
+            
+            KodingAppsController.appendHeadElements
+              identifier  : "preview"
+              items       : [
+                type    : 'style'
+                url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
+              ,
+                type    : 'script'
+                url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
+              ]
+            , (err)->
+              delete window.appPreview
+              throw Error err if err
+        else
+          @alert.updatePartial "Failed to serve #{app}.kdapp..."
 
     else
       @alert.updatePartial "Please specify a kdapp to serve..."
     
   publishApp:(path, target='test')->
-    if path and target
-      KodingAppsController.createJApp {
-        path, target
-      }, @publishCallback
+    if path
+      @pathExists appPath, (state)=>
+        if state
+          KodingAppsController.createJApp {
+            path, target
+          }, @publishCallback
+        else
+          @alert.updatePartial "Please specify a kdapp to publish..."
+          @alert.show()
     else
       @alert.updatePartial "Please specify a kdapp to publish..."
       @alert.show()
