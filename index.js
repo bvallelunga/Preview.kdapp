@@ -1,4 +1,4 @@
-/* Compiled by kdc on Thu Jul 17 2014 19:53:41 GMT+0000 (UTC) */
+/* Compiled by kdc on Thu Jul 17 2014 21:26:48 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -140,10 +140,6 @@ PreviewMainView = (function(_super) {
 
   PreviewMainView.prototype.viewAppended = function() {
     var appPath, hostname, publishTarget;
-    this.addSubView(this.alert = new KDCustomHTMLView({
-      tagName: "div",
-      cssClass: "alert hidden"
-    }));
     appPath = this.getParameterByName("path");
     hostname = this.getParameterByName("hostname");
     publishTarget = this.getParameterByName("publish");
@@ -177,40 +173,48 @@ PreviewMainView = (function(_super) {
     });
   };
 
+  PreviewMainView.prototype.showAlert = function(message) {
+    if (!this.alert) {
+      this.addSubView(this.alert = new KDCustomHTMLView({
+        tagName: "div",
+        cssClass: "alert"
+      }));
+    }
+    return this.alert.updatePartial(message);
+  };
+
   PreviewMainView.prototype.previewApp = function() {
     var app, appPath,
       _this = this;
     app = this.getParameterByName("app");
     appPath = "/home/" + this.user + "/Web/" + app + ".kdapp";
-    this.alert.show();
     if (!app) {
-      return this.alert.updatePartial("Please specify a kdapp to serve...");
+      return this.showAlert("Please specify a kdapp to serve...");
     }
-    this.alert.updatePartial("Loading app...");
-    return this.pathExists(appPath, function(state) {
-      if (state) {
-        _this.setClass("reset");
-        _this.destroySubViews();
-        window.appPreview = _this;
-        return KodingAppsController.appendHeadElements({
-          identifier: "preview",
-          items: [
-            {
-              type: 'style',
-              url: "//" + _this.user + ".kd.io/" + app + ".kdapp/style.css"
-            }, {
-              type: 'script',
-              url: "//" + _this.user + ".kd.io/" + app + ".kdapp/index.js"
-            }
-          ]
-        }, function(err) {
-          delete window.appPreview;
-          if (err) {
-            throw Error(err);
-          }
-        });
+    window.appPreview = this;
+    KodingAppsController.appendHeadElements({
+      identifier: "preview",
+      items: [
+        {
+          type: 'style',
+          url: "//" + this.user + ".kd.io/" + app + ".kdapp/style.css"
+        }, {
+          type: 'script',
+          url: "//" + this.user + ".kd.io/" + app + ".kdapp/index.js"
+        }
+      ]
+    }, function(err) {
+      delete window.appPreview;
+      if (!err) {
+        return _this.setClass("reset");
       } else {
-        return _this.alert.updatePartial("Failed to serve " + app + ".kdapp...");
+        _this.showAlert("Failed to serve " + app + ".kdapp...");
+        throw Error(err);
+      }
+    });
+    return this.pathExists(appPath, function(state) {
+      if (!state) {
+        return _this.showAlert("Failed to serve " + app + ".kdapp...");
       }
     });
   };
@@ -220,9 +224,10 @@ PreviewMainView = (function(_super) {
     if (target == null) {
       target = 'test';
     }
-    if (!appPath) {
-      this.alert.updatePartial("Please specify a kdapp to publish...");
-      return this.alert.show();
+    if (!(appPath && hostname)) {
+      this.showAlert("Please specify a kdapp to publish...");
+    } else {
+      this.showAlert("Publishing app, please wait...");
     }
     return this.pathExists(appPath, function(state) {
       if (state) {
@@ -231,8 +236,7 @@ PreviewMainView = (function(_super) {
           target: target
         }, _this.publishCallback);
       } else {
-        _this.alert.updatePartial("Please specify a kdapp to publish...");
-        return _this.alert.show();
+        return _this.showAlert("Please specify a kdapp to publish...");
       }
     });
   };

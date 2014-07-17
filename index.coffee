@@ -7,10 +7,6 @@ class PreviewMainView extends KDView
     super options, data
 
   viewAppended:->
-    @addSubView @alert = new KDCustomHTMLView
-      tagName    : "div"
-      cssClass   : "alert hidden"
-    
     appPath       = @getParameterByName "path"
     hostname      = @getParameterByName "hostname"
     publishTarget = @getParameterByName "publish"
@@ -31,39 +27,49 @@ class PreviewMainView extends KDView
     @kiteHelper.getKite().then (kite)=>
       kite.fsExists(path : path).then cb
   
-  previewApp:->
+  showAlert: (message)->
+    unless @alert
+      @addSubView @alert = new KDCustomHTMLView
+        tagName    : "div"
+        cssClass   : "alert"
+    
+    @alert.updatePartial message
+    
+  previewApp: ->
     app = @getParameterByName "app"
     appPath = "/home/#{@user}/Web/#{app}.kdapp"
-    @alert.show()
     
-    return @alert.updatePartial "Please specify a kdapp to serve..." unless app
-    
-    @alert.updatePartial "Loading app..."
-    @pathExists appPath, (state)=>
-      if state
-          @setClass "reset"
-          @destroySubViews()
-          window.appPreview = @
-          
-          KodingAppsController.appendHeadElements
-            identifier  : "preview"
-            items       : [
-              type    : 'style'
-              url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
-            ,
-              type    : 'script'
-              url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
-            ]
-          , (err)->
-            delete window.appPreview
-            throw Error err if err
+    unless app
+      return @showAlert "Please specify a kdapp to serve..."
+      
+    window.appPreview = @
+    KodingAppsController.appendHeadElements
+      identifier  : "preview"
+      items       : [
+        type    : 'style'
+        url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
+      ,
+        type    : 'script'
+        url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
+      ]
+    , (err)=>
+      delete window.appPreview
+      
+      unless err
+        @setClass "reset"
       else
-        @alert.updatePartial "Failed to serve #{app}.kdapp..."
+        @showAlert "Failed to serve #{app}.kdapp..."
+        throw Error err
+    
+    @pathExists appPath, (state)=>
+      unless state
+        @showAlert "Failed to serve #{app}.kdapp..."
     
   publishApp:(appPath, hostname, target='test')->
-    unless appPath
-      @alert.updatePartial "Please specify a kdapp to publish..."
-      return @alert.show()
+    unless appPath and hostname
+      @showAlert "Please specify a kdapp to publish..."
+    else
+      @showAlert "Publishing app, please wait..."
     
     @pathExists appPath, (state)=>
       if state
@@ -72,8 +78,7 @@ class PreviewMainView extends KDView
           target: target
         }, @publishCallback
       else
-        @alert.updatePartial "Please specify a kdapp to publish..."
-        @alert.show()
+        @showAlert "Please specify a kdapp to publish..."
 
   publishCallback:(err, app)->
     if err or not app
