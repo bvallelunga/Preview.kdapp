@@ -41,27 +41,25 @@ class PreviewMainView extends KDView
     
     unless app
       return @showAlert "Please specify a kdapp to preview..."
-    
-    # Get Cookies From kd.io
-    $.get "//#{@user}.kd.io/", =>
-      window.appPreview = @
-      KodingAppsController.appendHeadElements
-        identifier  : "preview"
-        items       : [
-          type    : 'style'
-          url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
-        ,
-          type    : 'script'
-          url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
-        ]
-      , (err)=>
-        delete window.appPreview
-        
-        unless err
-          @setClass "reset"
-        else
-          @showAlert "Failed to preview #{app}.kdapp..."
-          throw Error err
+
+    window.appPreview = @
+    KodingAppsController.appendHeadElements
+      identifier  : "preview"
+      items       : [
+        type    : 'style'
+        url     : "//#{@user}.kd.io/#{app}.kdapp/style.css"
+      ,
+        type    : 'script'
+        url     : "//#{@user}.kd.io/#{app}.kdapp/index.js"
+      ]
+    , (err)=>
+      delete window.appPreview
+      
+      unless err
+        @setClass "reset"
+      else
+        @showAlert "Failed to preview #{app}.kdapp..."
+        throw Error err
     
     @pathExists appPath, (state)=>
       unless state

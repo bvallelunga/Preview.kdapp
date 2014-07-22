@@ -1,4 +1,4 @@
-/* Compiled by kdc on Tue Jul 22 2014 20:57:52 GMT+0000 (UTC) */
+/* Compiled by kdc on Tue Jul 22 2014 21:01:15 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
@@ -192,29 +192,27 @@ PreviewMainView = (function(_super) {
     if (!app) {
       return this.showAlert("Please specify a kdapp to preview...");
     }
-    $.get("//" + this.user + ".kd.io/", (function(_this) {
-      return function() {
-        window.appPreview = _this;
-        return KodingAppsController.appendHeadElements({
-          identifier: "preview",
-          items: [
-            {
-              type: 'style',
-              url: "//" + _this.user + ".kd.io/" + app + ".kdapp/style.css"
-            }, {
-              type: 'script',
-              url: "//" + _this.user + ".kd.io/" + app + ".kdapp/index.js"
-            }
-          ]
-        }, function(err) {
-          delete window.appPreview;
-          if (!err) {
-            return _this.setClass("reset");
-          } else {
-            _this.showAlert("Failed to preview " + app + ".kdapp...");
-            throw Error(err);
-          }
-        });
+    window.appPreview = this;
+    KodingAppsController.appendHeadElements({
+      identifier: "preview",
+      items: [
+        {
+          type: 'style',
+          url: "//" + this.user + ".kd.io/" + app + ".kdapp/style.css"
+        }, {
+          type: 'script',
+          url: "//" + this.user + ".kd.io/" + app + ".kdapp/index.js"
+        }
+      ]
+    }, (function(_this) {
+      return function(err) {
+        delete window.appPreview;
+        if (!err) {
+          return _this.setClass("reset");
+        } else {
+          _this.showAlert("Failed to preview " + app + ".kdapp...");
+          throw Error(err);
+        }
       };
     })(this));
     return this.pathExists(appPath, (function(_this) {
