@@ -1,8 +1,8 @@
-/* Compiled by kdc on Thu Jul 17 2014 22:40:26 GMT+0000 (UTC) */
+/* Compiled by kdc on Tue Jul 22 2014 20:49:04 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 /* BLOCK STARTS: /home/bvallelunga/Applications/Preview.kdapp/kitehelper.coffee */
-var KiteHelper, _ref,
+var KiteHelper,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -10,37 +10,37 @@ KiteHelper = (function(_super) {
   __extends(KiteHelper, _super);
 
   function KiteHelper() {
-    _ref = KiteHelper.__super__.constructor.apply(this, arguments);
-    return _ref;
+    return KiteHelper.__super__.constructor.apply(this, arguments);
   }
 
   KiteHelper.prototype.mvIsStarting = false;
 
   KiteHelper.prototype.getReady = function() {
-    var _this = this;
-    return new Promise(function(resolve, reject) {
-      var JVM;
-      JVM = KD.remote.api.JVM;
-      return JVM.fetchVmsByContext(function(err, vms) {
-        var alias, kiteController, vm, _i, _len;
-        if (err) {
-          console.warn(err);
-        }
-        if (!vms) {
-          return;
-        }
-        _this._vms = vms;
-        _this._kites = {};
-        kiteController = KD.getSingleton('kiteController');
-        for (_i = 0, _len = vms.length; _i < _len; _i++) {
-          vm = vms[_i];
-          alias = vm.hostnameAlias;
-          _this._kites[alias] = kiteController.getKite("os-" + vm.region, alias, 'os');
-        }
-        _this.emit('ready');
-        return resolve();
-      });
-    });
+    return new Promise((function(_this) {
+      return function(resolve, reject) {
+        var JVM;
+        JVM = KD.remote.api.JVM;
+        return JVM.fetchVmsByContext(function(err, vms) {
+          var alias, kiteController, vm, _i, _len;
+          if (err) {
+            console.warn(err);
+          }
+          if (!vms) {
+            return;
+          }
+          _this._vms = vms;
+          _this._kites = {};
+          kiteController = KD.getSingleton('kiteController');
+          for (_i = 0, _len = vms.length; _i < _len; _i++) {
+            vm = vms[_i];
+            alias = vm.hostnameAlias;
+            _this._kites[alias] = kiteController.getKite("os-" + vm.region, alias, 'os');
+          }
+          _this.emit('ready');
+          return resolve();
+        });
+      };
+    })(this));
   };
 
   KiteHelper.prototype.getVm = function() {
@@ -49,40 +49,41 @@ KiteHelper = (function(_super) {
   };
 
   KiteHelper.prototype.getKite = function() {
-    var _this = this;
-    return new Promise(function(resolve, reject) {
-      return _this.getReady().then(function() {
-        var kite, vm, vmController;
-        vm = _this.getVm().hostnameAlias;
-        vmController = KD.singletons.vmController;
-        if (!(kite = _this._kites[vm])) {
-          return reject({
-            message: "No such kite for " + vm
-          });
-        }
-        return vmController.info(vm, function(err, vmn, info) {
-          var timeout;
-          if (!_this.mvIsStarting && info.state === "STOPPED") {
-            _this.mvIsStarting = true;
-            timeout = 10 * 60 * 1000;
-            kite.options.timeout = timeout;
-            return kite.vmOn().then(function() {
-              return resolve(kite);
-            }).timeout(timeout)["catch"](function(err) {
-              return reject(err);
+    return new Promise((function(_this) {
+      return function(resolve, reject) {
+        return _this.getReady().then(function() {
+          var kite, vm, vmController;
+          vm = _this.getVm().hostnameAlias;
+          vmController = KD.singletons.vmController;
+          if (!(kite = _this._kites[vm])) {
+            return reject({
+              message: "No such kite for " + vm
             });
-          } else {
-            return resolve(kite);
           }
+          return vmController.info(vm, function(err, vmn, info) {
+            var timeout;
+            if (!_this.mvIsStarting && info.state === "STOPPED") {
+              _this.mvIsStarting = true;
+              timeout = 10 * 60 * 1000;
+              kite.options.timeout = timeout;
+              return kite.vmOn().then(function() {
+                return resolve(kite);
+              }).timeout(timeout)["catch"](function(err) {
+                return reject(err);
+              });
+            } else {
+              return resolve(kite);
+            }
+          });
         });
-      });
-    });
+      };
+    })(this));
   };
 
   KiteHelper.prototype.run = function(cmd, timeout, callback) {
-    var _ref1;
+    var _ref;
     if (!callback) {
-      _ref1 = [callback, timeout], timeout = _ref1[0], callback = _ref1[1];
+      _ref = [callback, timeout], timeout = _ref[0], callback = _ref[1];
     }
     if (timeout == null) {
       timeout = 10 * 60 * 1000;
@@ -165,12 +166,13 @@ PreviewMainView = (function(_super) {
   };
 
   PreviewMainView.prototype.pathExists = function(path, cb) {
-    var _this = this;
-    return this.kiteHelper.getKite().then(function(kite) {
-      return kite.fsExists({
-        path: path
-      }).then(cb);
-    });
+    return this.kiteHelper.getKite().then((function(_this) {
+      return function(kite) {
+        return kite.fsExists({
+          path: path
+        }).then(cb);
+      };
+    })(this));
   };
 
   PreviewMainView.prototype.showAlert = function(message) {
@@ -184,8 +186,7 @@ PreviewMainView = (function(_super) {
   };
 
   PreviewMainView.prototype.previewApp = function() {
-    var app, appPath,
-      _this = this;
+    var app, appPath;
     app = this.getParameterByName("app");
     appPath = "/home/" + this.user + "/Web/" + app + ".kdapp";
     if (!app) {
@@ -203,24 +204,27 @@ PreviewMainView = (function(_super) {
           url: "//" + this.user + ".kd.io/" + app + ".kdapp/index.js"
         }
       ]
-    }, function(err) {
-      delete window.appPreview;
-      if (!err) {
-        return _this.setClass("reset");
-      } else {
-        _this.showAlert("Failed to preview " + app + ".kdapp...");
-        throw Error(err);
-      }
-    });
-    return this.pathExists(appPath, function(state) {
-      if (!state) {
-        return _this.showAlert("Failed to preview " + app + ".kdapp...");
-      }
-    });
+    }, (function(_this) {
+      return function(err) {
+        delete window.appPreview;
+        if (!err) {
+          return _this.setClass("reset");
+        } else {
+          _this.showAlert("Failed to preview " + app + ".kdapp...");
+          throw Error(err);
+        }
+      };
+    })(this));
+    return this.pathExists(appPath, (function(_this) {
+      return function(state) {
+        if (!state) {
+          return _this.showAlert("Failed to preview " + app + ".kdapp...");
+        }
+      };
+    })(this));
   };
 
   PreviewMainView.prototype.publishApp = function(appPath, hostname, target) {
-    var _this = this;
     if (target == null) {
       target = 'test';
     }
@@ -229,16 +233,18 @@ PreviewMainView = (function(_super) {
     } else {
       this.showAlert("Publishing app, please wait...");
     }
-    return this.pathExists(appPath, function(state) {
-      if (state) {
-        return KodingAppsController.createJApp({
-          path: "[" + hostname + "]" + appPath,
-          target: target
-        }, _this.publishCallback);
-      } else {
-        return _this.showAlert("Please specify a kdapp to publish...");
-      }
-    });
+    return this.pathExists(appPath, (function(_this) {
+      return function(state) {
+        if (state) {
+          return KodingAppsController.createJApp({
+            path: "[" + hostname + "]" + appPath,
+            target: target
+          }, _this.publishCallback);
+        } else {
+          return _this.showAlert("Please specify a kdapp to publish...");
+        }
+      };
+    })(this));
   };
 
   PreviewMainView.prototype.publishCallback = function(err, app) {
