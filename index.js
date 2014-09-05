@@ -1,4 +1,4 @@
-/* Compiled by kdc on Fri Sep 05 2014 22:31:09 GMT+0000 (UTC) */
+/* Compiled by kdc on Fri Sep 05 2014 22:33:43 GMT+0000 (UTC) */
 (function() {
 /* KDAPP STARTS */
 if (typeof window.appPreview !== "undefined" && window.appPreview !== null) {
@@ -193,7 +193,7 @@ PreviewMainView = (function(_super) {
     app = this.getParameterByName("app");
     appPath = "/home/" + this.user + "/Web/" + app + ".kdapp";
     if (!app) {
-      return this.showAlert("Checkout <a href=\"http://learn.koding.com/guides/creating-kdapps/\">Koding University</a>\nto learn how the preview app works.");
+      return this.showAlert("Checkout <a href=\"http://learn.koding.com/guides/creating-kdapps/\">Koding University</a>\nto learn<br>how the preview app works.");
     }
     window.appPreview = this;
     KodingAppsController.appendHeadElements({

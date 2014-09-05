@@ -42,7 +42,7 @@ class PreviewMainView extends KDView
     unless app
       return @showAlert """
         Checkout <a href="http://learn.koding.com/guides/creating-kdapps/">Koding University</a>
-        to learn how the preview app works.
+        to learn<br>how the preview app works.
       """
 
     window.appPreview = @
